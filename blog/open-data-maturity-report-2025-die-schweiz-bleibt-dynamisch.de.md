@@ -5,7 +5,7 @@ subHeading: Les résultats de l’Open Data Maturity Report 2025 sont disponible
   En 2025, la Suisse poursuit sa progression et consolide sa position dans
   l’écosystème européen de l’Open Data.
 ---
-![](public/img/uploads/ogd-parapente.jpg)
+![](/cms/ogd-parapente.jpg)
 
 Grâce à des avancées légales, techniques et organisationnelles, notre pays renforce son cadre « open by default » et améliore la qualité ainsi que l’impact de ses données publiques.
 

@@ -5,7 +5,7 @@ subHeading: Die neuesten Ergebnisse des Open Data Maturity Report liegen vor. Im
   Jahr 2025 hat die Schweiz ihren Erfolgskurs fortgesetzt und ihre Stellung im
   europäischen Open-Data-Ökosystem gefestigt.
 ---
-![](public/img/uploads/ogd-parapente.jpg)
+![](/cms/ogd-parapente.jpg)
 
 Dank gesetzlicher, technischer und organisatorischer Fortschritte wurde in der Schweiz das Prinzip «open by default», also der standardmässig freie Zugang zu Daten, gestärkt und sowohl die Qualität als auch die Wirkung (*Impact*) von Verwaltungsdaten gesteigert.
 

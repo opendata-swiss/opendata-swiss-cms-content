@@ -1,0 +1,96 @@
+name: "Deploy Preview Environment"
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - closed
+
+jobs:
+  trigger-preview:
+    runs-on: ubuntu-latest
+
+    permissions:
+      actions: write
+      contents: read
+      pull-requests: write
+      statuses: write
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Generate token
+        id: generate_token
+        uses: tibdex/github-app-token@v1
+        with:
+          app_id: ${{ secrets.ODS_GITHUB_APP_ID }}
+          private_key: ${{ secrets.ODS_GITHUB_PRIVATE_KEY }}
+          installation_id: ${{ secrets.ODS_GITHUB_INSTALLATION_ID }}
+
+      - name: Configure some variables
+        id: vars
+        run: |
+          BRANCH_NAME="${GITHUB_HEAD_REF}"
+          BRANCH_STANDARDIZED="$(perl -MURI::Escape -e 'print uri_escape($ARGV[0])' "$BRANCH_NAME" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9-]+/-/g; s/-+/-/g; s/^-+//; s/-+$//' | cut -c1-40)"
+          echo "branch=${BRANCH_STANDARDIZED}" >> $GITHUB_OUTPUT
+
+      - name: Start preview environment
+        if: github.event.action != 'closed'
+        run: |
+          gh workflow run preview-trigger.yaml \
+            --repo opendata-swiss/metadata.swiss \
+            -f env=${{ vars.ENVIRONMENT }} \
+            -f action=UP \
+            -f deployment_name="${{ steps.vars.outputs.branch }}" \
+            -f cms_ref="${{ github.sha }}"
+        env:
+          GH_TOKEN: ${{ steps.generate_token.outputs.token }}
+
+      # Handle preview URL comment on the PR
+      - name: Find Comment
+        uses: peter-evans/find-comment@v4
+        id: fc
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: "github-actions[bot]"
+          body-includes: Your preview environment is deployed
+      - name: Show preview URL directly on the PR
+        uses: peter-evans/create-or-update-comment@v5
+        with:
+          comment-id: ${{ steps.fc.outputs.comment-id }}
+          edit-mode: replace
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            Your preview environment is deployed! 🚀
+            **URL:** https://${{ steps.vars.outputs.branch }}.${{ vars.ENVIRONMENT }}-previews.ods.zazukoians.org/
+            **Note:** It may take a few minutes for the DNS to propagate, the certificate to be generated and the preview to be reachable.    
+
+      - name: Determine changed content path
+        id: content
+        run: |
+          PATH_SUFFIX=$(scripts/get-preview-path.sh ${{ github.base_ref }} | head -n 1)
+          echo "suffix=$PATH_SUFFIX" >> $GITHUB_OUTPUT
+
+      - name: Status check
+        uses: myrotvorets/set-commit-status-action@v2.0.1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          context: Preview deployed
+          description: It may take a few minutes for the DNS to propagate, the certificate to be generated and the preview to be reachable.
+          status: success
+          targetUrl: https://${{ steps.vars.outputs.branch }}.${{ vars.ENVIRONMENT }}-previews.ods.zazukoians.org${{ steps.content.outputs.suffix }}
+
+      - name: Stop preview environment
+        if: github.event.action == 'closed'
+        continue-on-error: true
+        run: |
+          gh workflow run preview-trigger.yaml \
+            --repo opendata-swiss/metadata.swiss \
+            -f env=${{ vars.ENVIRONMENT }} \
+            -f action=DOWN \
+            -f deployment_name="${{ steps.vars.outputs.branch }}" \
+            -f cms_ref="${{ github.sha }}"
+        env:
+          GH_TOKEN: ${{ steps.generate_token.outputs.token }}
