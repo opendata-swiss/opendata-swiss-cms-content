@@ -43,3 +43,35 @@ git push int HEAD:my-branch
 ```
 
 The last push is important. A standard `git push` would push to the default remote, which in this scenario would be `test`.
+
+### Syncing shared content between environments
+
+Despite the repositories being independent, and some files are shared between environments.
+
+* Shared content
+  * [.github](.github)
+  * [assets](assets) ⚠️
+  * [handbook](handbook)
+  * [pages](pages)
+  * [scripts](scripts)
+  * [.gitignore](.gitignore)
+* Independent content
+  * [blog](blog)
+  * [showcases](showcases)
+  * [README.md](README.md)
+
+In case you'd like to sync some of the shared content between environments,
+you can use `git checkout` to get only the files you want to update.
+
+For example, to sync the `pages` folder from PROD to TEST, you can do:
+
+```bash
+git switch -c test/main
+git switch -c test/update-pages
+git checkout prod/main -- pages
+git commit -m "Update pages"
+git push test HEAD:update-pages
+```
+
+⚠️ – Assets contain files for all the content. Syncing them whole is not recommended. Instead, you should sync only
+the files that are relevant, i.e., actually used in the synced content.
