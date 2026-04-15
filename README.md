@@ -32,9 +32,11 @@ When content should be synchronised with INT/PROD, make sure to keep the TEST co
 If you wish to create a new branch to INT or PROD, you can do so by branching off the corresponding remote and then pushing slightly different:
 
 ```bash
-# Add -c only on first switch, to create a new local branch
-git switch -c int/main
-# Create a new branch for INT
+# make sure you have the latest changes from INT
+git fetch int
+# do not track the main branch of another repo
+git switch int/main --detach
+# Create a new branch
 git switch -c int/my-branch
 # Make changes
 # ...
