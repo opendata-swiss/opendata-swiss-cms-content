@@ -20,12 +20,15 @@ subHeading: >-
 
 
   À noter que le portail se limite à répertorier les données. Les données sont hébergées par leur propriétaire. Ce qui évite de fait toute redondance. En règle générale, aucune donnée personnelle n’est publiée dans le cadre de l’Open Government Data. Il s’agit de données agrégées et anonymisées qui ne permettent pas d’identifier les personnes concernées. En effet, c’est une condition sine qua non pour pouvoir proposer ces données.
+parent: null
+mainMenu: true
+after: terms-of-use
 ---
 ## Vous souhaitez publier des données sur opendata.swiss?
 
 Les organisations intéressées à la publication de données en libre accès trouvent des informations dans le manuel en ligne suivant: [handbook.opendata.swiss](/handbook)
 
-[![opendata.swiss handbook logo](/cms/handbook_logo.png "opendata.swiss handbook logo")](/handbook)
+[![opendata.swiss handbook logo](/img/handbook_logo.png "opendata.swiss handbook logo")](/handbook)
 
 ## Qui gère le portail?
 

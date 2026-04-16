@@ -20,12 +20,14 @@ subHeading: >-
 
 
   Note that the portal is limited to referencing data. The data are hosted by their owner. This avoids any redundancy. As a general rule, no personal data are published in the scope of open government data. The data are aggregated and anonymised and do not enable the persons concerned to be identified. This is indeed essential in the provision of these data.
+mainMenu: true
+after: terms-of-use
 ---
 ## Möchten Sie Daten auf opendata.swiss publizieren?
 
-Interessierte Anbieter öffentlicher Daten finden weitere Einzelheiten im entsprechenden Handbuch unter folgendem Link: [handbook.opendata.swiss](/handbook)[](/handbook)
+Interessierte Anbieter öffentlicher Daten finden weitere Einzelheiten im entsprechenden Handbuch unter folgendem Link: [handbook.opendata.swiss](/handbook)
 
-[![opendata.swiss handbook logo](/cms/handbook_logo.png "opendata.swiss handbook logo")](/handbook)
+[![opendata.swiss handbook logo](/img/handbook_logo.png "opendata.swiss handbook logo")](/handbook)
 
 ## Wer verwaltet das Portal?
 

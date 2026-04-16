@@ -1,0 +1,32 @@
+name: Trigger Harvesting showcases
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "showcases/**"
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - name: Generate token
+        id: generate_token
+        uses: tibdex/github-app-token@v1
+        with:
+          app_id: ${{ secrets.ODS_GITHUB_APP_ID }}
+          private_key: ${{ secrets.ODS_GITHUB_PRIVATE_KEY }}
+          installation_id: ${{ secrets.ODS_GITHUB_INSTALLATION_ID }}
+
+      - name: Trigger Piveau Harvester
+        run: |
+          gh workflow run script-manual-trigger.yaml \
+            --repo opendata-swiss/metadata.swiss \
+            --ref main \
+            -f environment=$(echo "${{ vars.ENVIRONMENT }}" | tr '[:lower:]' '[:upper:]') \
+            -f action=HARVEST_SHOWCASES
+        env:
+          GH_TOKEN: ${{ steps.generate_token.outputs.token }}
